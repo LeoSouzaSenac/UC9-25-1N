@@ -4,6 +4,16 @@
 
 Neste tutorial, vamos criar uma aplicação Java simples que conecta a um banco de dados SQLite e realiza algumas operações, como criar uma tabela de usuários, inserir novos usuários e listar os usuários existentes. Vamos entender como cada parte do código funciona, explicando tudo de forma clara e detalhada.
 
+## Atenção:
+
+Abra o arquivo build.gradle, procure a seção 'dependencies' e coloque esta linha:
+```bash
+// JDBC do SQLite
+    implementation 'org.xerial:sqlite-jdbc:3.46.0.0'
+```
+
+Salve, e em 'Projects', clique com o botão esquerdo do mouse no projeto e selecione 'Clean and Build'. Isso baixará as dependências do JDBC automaticamente.
+
 ---
 
 ## Estrutura do Projeto
