@@ -294,3 +294,131 @@ public class App {
 - **`InserirUsuario.inserirUsuario(conexao, "João", "joao@email.com");`**: Insere um novo usuário na tabela.
 - **`ListarUsuarios.listarUsuarios(conexao);`**: Exibe todos os usuários presentes na tabela.
 - **`conexaoSQLite.desconectar(conexao);`**: Fecha a conexão com o banco de dados.
+
+---
+
+## 6. **AtualizarUsuario**: Atualizar Dados de um Usuário
+
+### O que faz esta classe?
+
+A classe **`AtualizarUsuario`** é responsável por **alterar os dados de um usuário existente** na tabela `usuarios`, utilizando o **ID** como referência.
+Isso garante que apenas o usuário correto seja atualizado.
+
+---
+
+### Código:
+
+```java
+package Conexao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+public class AtualizarUsuario {
+
+    public static void atualizarUsuario(Connection conexao, int id, String novoNome, String novoEmail) {
+        String sql = "UPDATE usuarios SET nome = ?, email = ? WHERE id = ?";
+
+        try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+
+            pstmt.setString(1, novoNome);   // Novo nome
+            pstmt.setString(2, novoEmail);  // Novo email
+            pstmt.setInt(3, id);            // ID do usuário a ser atualizado
+
+            int linhasAfetadas = pstmt.executeUpdate();
+
+            if (linhasAfetadas > 0) {
+                System.out.println("Usuário atualizado com sucesso!");
+            } else {
+                System.out.println("Nenhum usuário encontrado com esse ID.");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao atualizar usuário: " + e.getMessage());
+        }
+    }
+}
+```
+
+---
+
+### Explicação
+
+* **`UPDATE usuarios SET nome = ?, email = ? WHERE id = ?`**
+  Atualiza os campos `nome` e `email` **somente** do usuário cujo `id` for informado.
+
+* **`pstmt.setString(1, novoNome)`**
+  Substitui o primeiro `?` pelo novo nome.
+
+* **`pstmt.setString(2, novoEmail)`**
+  Substitui o segundo `?` pelo novo email.
+
+* **`pstmt.setInt(3, id)`**
+  Define qual usuário será atualizado.
+
+* **`executeUpdate()`**
+  Retorna quantas linhas foram alteradas. Isso permite saber se o usuário realmente existia.
+
+---
+
+## 7. **DeletarUsuario**: Remover um Usuário do Banco
+
+### O que faz esta classe?
+
+A classe **`DeletarUsuario`** é responsável por **excluir um usuário da tabela** usando o **ID** como critério.
+
+---
+
+### Código:
+
+```java
+package Conexao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+public class DeletarUsuario {
+
+    public static void deletarUsuario(Connection conexao, int id) {
+        String sql = "DELETE FROM usuarios WHERE id = ?";
+
+        try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id); // ID do usuário a ser removido
+
+            int linhasAfetadas = pstmt.executeUpdate();
+
+            if (linhasAfetadas > 0) {
+                System.out.println("Usuário deletado com sucesso!");
+            } else {
+                System.out.println("Nenhum usuário encontrado com esse ID.");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao deletar usuário: " + e.getMessage());
+        }
+    }
+}
+```
+
+---
+
+
+## Como usar no `App` (exemplo rápido)
+
+```java
+AtualizarUsuario.atualizarUsuario(conexao, 1, "João Silva", "joao@novoemail.com");
+DeletarUsuario.deletarUsuario(conexao, 2);
+```
+
+---
+
+### 💡 Observação didática importante (boa prática)
+
+Você agora tem um **CRUD completo**:
+
+* **Create** → InserirUsuario
+* **Read** → ListarUsuarios
+* **Update** → AtualizarUsuario
+* **Delete** → DeletarUsuario
+
