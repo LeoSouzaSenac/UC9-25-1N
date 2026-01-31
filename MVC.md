@@ -525,36 +525,36 @@ import java.util.List;
 
 public class LivroService {
     // Aqui ficam as REGRAS DE NEGÓCIO do sistema
-// Não tem SQL, não tem interface gráfica e não acessa banco diretamente
+    // Não tem SQL, não tem interface gráfica e não acessa banco diretamente
 
-  // O Service possui uma instância do DAO
+    // O Service possui uma instância do DAO
     // Ele usa o DAO para salvar e buscar dados
     private LivroDAO livroDAO = new LivroDAO();
 
-/ Método responsável por cadastrar um livro
+    // Método responsável por cadastrar um livro
     // Antes de salvar, ele valida as regras de negócio
     public void cadastrarLivro(Livro livro) {
 
-// Regra de negócio:
+        // Regra de negócio:
         // Um livro NÃO pode ser cadastrado sem título
         if (livro.getTitulo() == null || livro.getTitulo().isEmpty()) {
 
-/ Lança uma exceção se a regra for violada
+            // Lança uma exceção se a regra for violada
             // O DAO NÃO faz validação, quem valida é o Service
             throw new IllegalArgumentException("Título é obrigatório");
         }
 
-// Regra de negócio:
+        // Regra de negócio:
         // Ano de publicação precisa ser válido
         // Essa regra não tem relação com banco, por isso fica no Service
         if (livro.getAnoPublicacao() < 1500) {
             throw new IllegalArgumentException("Ano de publicação inválido");
         }
- // Se todas as regras passaram, o Service manda o DAO salvar no banco
+        // Se todas as regras passaram, o Service manda o DAO salvar no banco
         livroDAO.cadastrar(livro);
     }
 
-// Aqui não existe regra de negócio
+         // Aqui não existe regra de negócio
         // O Service apenas pede para o DAO buscar os dados
     public List<Livro> listarLivros() {
         return livroDAO.listar();
