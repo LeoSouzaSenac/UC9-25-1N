@@ -579,19 +579,15 @@ public class LivroDAO {
 # ✅ SERVICE – `LivroService.java`
 
 ```java
-package service;
-
-import dao.LivroDAO;
-import model.Livro;
-import java.util.List;
-
+/*
+    O Service é a camada que aplica as regras do sistema 
+    e decide se uma ação pode ou não acontecer. É ele quem chama os métodos
+    das classes da camada DAO e valida.
+*/
 public class LivroService {
     // Aqui ficam as REGRAS DE NEGÓCIO do sistema
     // Não tem SQL, não tem interface gráfica e não acessa banco diretamente
 
-    // O Service possui uma instância do DAO
-    // Ele usa o DAO para salvar e buscar dados
-    private LivroDAO livroDAO = new LivroDAO();
 
     // Método responsável por cadastrar um livro
     // Antes de salvar, ele valida as regras de negócio
@@ -603,6 +599,13 @@ public class LivroService {
 
             // Lança uma exceção se a regra for violada
             // O DAO NÃO faz validação, quem valida é o Service
+            // IllegalArgumentException é uma exceção padrão do Java usada quando
+            // um método recebe um argumento inválido
+            // O Service é o guardião das regras.
+            // Ao lançar a excessão, interrompemos o método imediatamente, forçamos
+            // quem chamou a lidar com o erro e evitamos que o sistema entre em estado inválido
+            // Não usamos if/else e System.out.println porque com ele o código continua 
+            // “silenciosamente”, e quem chamou o método não sabe que falhou
             throw new IllegalArgumentException("Título é obrigatório");
         }
 
@@ -613,13 +616,55 @@ public class LivroService {
             throw new IllegalArgumentException("Ano de publicação inválido");
         }
         // Se todas as regras passaram, o Service manda o DAO salvar no banco
-        livroDAO.cadastrar(livro);
+        LivroDAO.cadastrar(livro);
     }
 
-         // Aqui não existe regra de negócio
+        // Aqui não existe regra de negócio
         // O Service apenas pede para o DAO buscar os dados
-    public List<Livro> listarLivros() {
-        return livroDAO.listar();
+    public ArrayList<Livro> listarLivros() {
+        return LivroDAO.listar();
+    }
+    
+    
+    // Atualizar também precisa validar regras
+    public void atualizarLivro(Livro livro) {
+
+        // Regra de negócio:
+        // Para atualizar, o livro precisa ter ID
+        if (livro.getId() <= 0) {
+            throw new IllegalArgumentException("ID do livro inválido");
+        }
+
+        // Reaproveitamos regras parecidas com o cadastro
+        if (livro.getTitulo() == null || livro.getTitulo().isEmpty()) {
+            throw new IllegalArgumentException("Título é obrigatório");
+        }
+
+        if (livro.getAutor() == null || livro.getAutor().isEmpty()) {
+            throw new IllegalArgumentException("Autor é obrigatório");
+        }
+
+        if (livro.getAnoPublicacao() < 1500) {
+            throw new IllegalArgumentException("Ano de publicação inválido");
+        }
+
+        // Se tudo estiver correto,
+        // o Service manda o DAO atualizar no banco
+        LivroDAO.atualizar(livro);
+    }
+
+    
+    // Aqui também existe regra de negócio
+    public void deletarLivro(int id) {
+
+        // Regra de negócio:
+        // Não faz sentido deletar um livro sem ID válido
+        if (id <= 0) {
+            throw new IllegalArgumentException("ID inválido para exclusão");
+        }
+
+        // Service autoriza o DAO a remover do banco
+        LivroDAO.deletar(id);
     }
 }
 ```
