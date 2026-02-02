@@ -453,61 +453,123 @@ public class Conexao {
 # ✅ DAO – `LivroDAO.java`
 
 ```java
-package dao;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package GerenciadorBiblioteca.dao;
 
-import database.Conexao;
-import model.Livro;
+import GerenciadorBiblioteca.database.Conexao;
+import GerenciadorBiblioteca.model.Livro;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ *
+ * @author Professor
+ */
+// DAO significa Data Access Objetc (Objeto de Acesso a Dados)
+// Nesta camada, vão classes que contém métodos para trabalhar com o banco
+// Por exemplo: inserir, ler, atualizar, deletar informações (CRUD)
 public class LivroDAO {
 
-    public void cadastrar(Livro livro) {
-        String sql = "INSERT INTO livro (titulo, autor, ano_publicacao, categoria) VALUES (?, ?, ?, ?)";
+    public static void cadastrar(Livro livro) {
+        String sql = "INSERT INTO livros (titulo, autor, ano_publi, categoria) VALUES (?,?,?,?)";
 
-        try (Connection conn = Conexao.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection con = Conexao.getConnection(); 
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            stmt.setString(1, livro.getTitulo());
-            stmt.setString(2, livro.getAutor());
-            stmt.setInt(3, livro.getAnoPublicacao());
-            stmt.setString(4, livro.getCategoria());
+            pstmt.setString(1, livro.getTitulo());
+            pstmt.setString(2, livro.getAutor());
+            pstmt.setInt(3, livro.getAnoPublicacao());
+            pstmt.setString(4, livro.getCategoria());
 
-            stmt.executeUpdate();
+            pstmt.executeUpdate();
+            System.out.println("Livro cadastrado com sucesso!");
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException error) {
+            System.out.println("Erro: " + error.getMessage());
         }
     }
 
-    public List<Livro> listar() {
-        List<Livro> livros = new ArrayList<>();
-        String sql = "SELECT * FROM livro";
+    public static ArrayList<Livro> listar() {
+        ArrayList<Livro> livros = new ArrayList<>();
+        String sql = "SELECT * FROM livros";
 
-        try (Connection conn = Conexao.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (Connection con = Conexao.getConnection(); 
+             Statement stmt = con.createStatement()) {
+
+            ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
                 Livro livro = new Livro();
                 livro.setId(rs.getInt("id"));
                 livro.setTitulo(rs.getString("titulo"));
                 livro.setAutor(rs.getString("autor"));
-                livro.setAnoPublicacao(rs.getInt("ano_publicacao"));
+                livro.setAnoPublicacao(rs.getInt("ano_publi"));
                 livro.setCategoria(rs.getString("categoria"));
                 livros.add(livro);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException error) {
+            System.out.println("Erro: " + error.getMessage());
         }
 
         return livros;
     }
+
+    public static void atualizar(Livro livro) {
+        String sql = "UPDATE livros SET titulo = ?, autor = ?, "
+                + "ano_publi = ?, categoria = ? WHERE id = ?";
+
+        try (Connection con = Conexao.getConnection(); 
+            PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+            pstmt.setString(1, livro.getTitulo());
+            pstmt.setString(2, livro.getAutor());
+            pstmt.setInt(3, livro.getAnoPublicacao());
+            pstmt.setString(4, livro.getCategoria());
+            pstmt.setInt(5, livro.getId());
+            
+            int linhasAtualizadas = pstmt.executeUpdate();
+            
+            if (linhasAtualizadas > 0) {
+                System.out.println("Livro atualizado com sucesso!");
+            } else {
+                System.out.println("Livro não encontrado!");
+            }
+
+        } catch (SQLException error) {
+            System.out.println("Erro: " + error.getMessage());
+        }
+    }
+    
+    public static void deletar(int id){
+        String sql = "DELETE from livros WHERE id = ?";
+        
+        try (Connection con = Conexao.getConnection(); 
+            PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            
+            int linhasDeletadas = pstmt.executeUpdate();
+            
+            if (linhasDeletadas > 0) {
+                System.out.println("Livro removido com sucesso!");
+            } else {
+                System.out.println("Livro não encontrado!");
+            }
+
+        } catch (SQLException error) {
+            System.out.println("Erro: " + error.getMessage());
+        }
+    }
 }
+
 ```
 
 📌 **DAO só acessa o banco.**
