@@ -15,11 +15,11 @@ Abra o arquivo build.gradle, procure a seção 'dependencies' e coloque esta lin
 Se for um projeto Maven, no arquilo 'pom.xml' adicione esta linha ao final, dentro de 'project':
 ```bash
 <dependencies>
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.46.0.0</version>
-        </dependency>
+        dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <version>8.4.0</version>
+</dependency>
     </dependencies>
 ```
 
