@@ -12,6 +12,20 @@ Abra o arquivo build.gradle, procure a seção 'dependencies' e coloque esta lin
     implementation 'org.xerial:sqlite-jdbc:3.46.0.0'
 ```
 
+Se for um projeto Maven, no arquilo 'pom.xml' adicione esta linha ao final, dentro de 'project':
+```bash
+<dependencies>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.46.0.0</version>
+        </dependency>
+    </dependencies>
+```
+
+
+
+
 Salve, e em 'Projects', clique com o botão esquerdo do mouse no projeto e selecione 'Clean and Build'. Isso baixará as dependências do JDBC automaticamente.
 
 ---
