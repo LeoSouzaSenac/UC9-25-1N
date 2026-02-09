@@ -676,23 +676,69 @@ public class LivroService {
 # ✅ CONTROLLER – `LivroController.java`
 
 ```java
-package controller;
-
-import model.Livro;
-import service.LivroService;
-import java.util.List;
-
 public class LivroController {
-
+    // Crio uma instância de LivroService
     private LivroService service = new LivroService();
 
-    public void cadastrarLivro(String titulo, String autor, int ano, String categoria) {
-        Livro livro = new Livro(titulo, autor, ano, categoria);
-        service.cadastrarLivro(livro);
+
+    public Resultado cadastrar(String titulo, String autor, int ano, String categoria) {
+
+        // Controller monta o objeto
+        Livro livro = new Livro();
+        livro.setTitulo(titulo);
+        livro.setAutor(autor);
+        livro.setAnoPublicacao(ano);
+        livro.setCategoria(categoria);
+
+        try {
+            service.cadastrarLivro(livro);
+            return new Resultado(true, "Livro cadastrado com sucesso");
+
+        } catch (IllegalArgumentException e) {
+            // Erro de regra de negócio
+            return new Resultado(false, e.getMessage());
+
+        }
     }
 
-    public List<Livro> listarLivros() {
+
+    public ArrayList<Livro> listar() {
+        // Não há regra nem erro aqui
         return service.listarLivros();
+    }
+
+
+    public Resultado atualizar(int id, String titulo, String autor, int ano, String categoria) {
+
+        // Controller monta o objeto de domínio
+        Livro livro = new Livro();
+        livro.setId(id);
+        livro.setTitulo(titulo);
+        livro.setAutor(autor);
+        livro.setAnoPublicacao(ano);
+        livro.setCategoria(categoria);
+
+        try {
+            service.atualizarLivro(livro);
+            return new Resultado(true, "Livro atualizado com sucesso");
+
+        } catch (IllegalArgumentException e) {
+            return new Resultado(false, e.getMessage());
+
+        } 
+    }
+
+
+    public Resultado deletar(int id) {
+
+        try {
+            service.deletarLivro(id);
+            return new Resultado(true, "Livro removido com sucesso");
+
+        } catch (IllegalArgumentException e) {
+            return new Resultado(false, e.getMessage());
+
+        } 
     }
 }
 ```
