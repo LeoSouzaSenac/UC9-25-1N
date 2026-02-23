@@ -1,14 +1,27 @@
-Gradle:
+````md
+## Dependência com Gradle
+
+```gradle
 dependencies {
     implementation 'org.springframework.security:spring-security-crypto:6.2.1'
 }
+````
 
-Maven:
+---
+
+## Dependência com Maven
+
+```xml
 <dependency>
-        <groupId>org.mindrot</groupId>
-        <artifactId>jbcrypt</artifactId>
-        <version>0.4</version>
+    <groupId>org.mindrot</groupId>
+    <artifactId>jbcrypt</artifactId>
+    <version>0.4</version>
 </dependency>
+```
+
+```
+```
+
 
 # Estrutura
 
