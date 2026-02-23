@@ -33,8 +33,10 @@ src/
     │
     ├── data
     │   ├── Conexao.java
+    │   
+    |
+    ├── dao
     │   └── UsuarioDAO.java
-    │
     ├── service
     │   └── UsuarioService.java
     │
